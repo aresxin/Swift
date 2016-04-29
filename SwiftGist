@@ -1,1 +1,28 @@
+1.API Design Guidelines
+https://swift.org/documentation/api-design-guidelines/
 
+2.Protocol-Oriented Programming in Swift
+<iOS 9 Tutorial Series: Protocol-Oriented Programming with UIKit>
+https://www.captechconsulting.com/blogs/ios-9-tutorial-series-protocol-oriented-programming-with-uikit  
+<Swift 2.0之初识面向协议编程>
+http://www.jianshu.com/p/3bff58e6bd8b 
+
+3.functional programming
+<Swift 函数式编程实践>
+http://www.swiftmi.com/topic/350.html
+<Swift の 函数式编程>
+https://io-meter.com/2014/06/04/swift's-functional-programing/
+<Swift函数式编程范式下的模板模式实践>
+http://www.jianshu.com/p/c4f185e4cd72
+
+4.Protocol List for Swift 2.2
+Equatable
+http://nshipster.cn/swift-comparison-protocols/
+http://www.jianshu.com/p/8d528c08c31b
+
+5.Should I use a Swift struct or a class?
+http://faq.sealedabstract.com/structs_or_classes/#swift-value-types
+
+6.swift code skill
+<10个惊艳的Swift单行代码>
+http://www.cocoachina.com/swift/20160429/16051.html
