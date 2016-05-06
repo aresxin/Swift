@@ -30,22 +30,27 @@ public enum OBSError: ErrorType {
         switch self {
         case OBSURLRequired:
             return 1003
+        case CDNURLRequired:
+            return 1005
         default:
             return 1004
         }
     }
     
     public var userInfo:[NSObject: AnyObject] {
-        let info = [NSLocalizedRecoverySuggestionErrorKey: "OBSError"]
+        // set alert title、message
+        let info = [NSLocalizedRecoverySuggestionErrorKey: "OBSError",NSLocalizedDescriptionKey: "OBSError Title"]
         return info
     }
     
     public var localizedRecoveryOptions: [String] {
-         return [NSLocalizedString("OK", comment:""), NSLocalizedString("Copy details", comment:"")]
+        // set alert button
+         return [NSLocalizedString("OK", comment:""), NSLocalizedString("Cancel", comment:"")]
     }
     
     func attemptRecoveryFromError(error: NSError, optionIndex: Int) -> Bool
     {
+        // when press button index Post Notification
         switch self {
         case OBSURLRequired:
             // Post Notification
@@ -74,8 +79,8 @@ public extension ErrorType {
         
         userInfo[NSLocalizedRecoveryOptionsErrorKey] = e.localizedRecoveryOptions
         userInfo[NSRecoveryAttempterErrorKey] = UnanticipatedErrorRecoveryAttempter(obsError: e)
-        
-        return NSError(domain: OBSError.Domain, code: e.code, userInfo: nil)
+        let error = NSError(domain: OBSError.Domain, code: e.code, userInfo: userInfo)
+        return error
     }
 }
 
