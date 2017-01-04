@@ -1,0 +1,909 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <title>Swift中协议的简单介绍 - CocoaChina_让移动开发更简单</title>
+    <meta name="keywords" content="Swift,iOS,iOS开发,程序员iPhone开发,iOS开发,iPad开发,Mac开发,苹果开发中文站,iPhone开发中文站,CocoaChina首页, Mac OS开发, Cocoa介绍,移动互联网,触控科技,Cocoa,Apple,developer,iOS,iPhone,iPad,iMac,iPod Touch,iPhone5,iPhone4S,iPad3,招聘,iPhone程序员,Objective-c,iPhone应用外包,ios6,ios面试,Cocos2d-x,cocos2d,iTunes,App Store,苹果开发" />
+    <meta name="description" content="CocoaChina前身是全球成立最早规模最大的苹果开发中文站，现致力为所有移动开发者提供资讯服务、问答服务、代码下载、工具库及人才招聘服务" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="baidu-tc-cerfication" content="3300a939a1098c27e94457b75a0bb8c1" />
+    <script type='text/javascript'>
+        function gotoMobilePage() {
+            var sUserAgent = navigator.userAgent.toLowerCase();
+            var agent_iphone = /iphone/i;
+            var agent_android = /android/i;
+            //var agent_ipad = /ipad/i;
+            var agent_ipod = /ipod/i;
+            var agent_wphone = /windows phone/i;
+            if(agent_iphone.test(sUserAgent) || agent_android.test(sUserAgent) || agent_ipod.test(sUserAgent) || agent_wphone.test(sUserAgent)){
+                var re = /\/\w+\/\d+\/(\d+)\.html/, 
+                    result = re.exec(window.location.pathname);
+                if ( result )
+                {
+                    window.location.href = "http://www.cocoachina.com/cms/wap.php?action=article&id=" + result[1];
+                } else {
+                    window.location.href = "http://m.cocoachina.com/";
+                }
+            }
+        }
+        gotoMobilePage(); 
+    </script>
+    <link rel="stylesheet" href="http://cdn.cocimg.com/assets/css/global.css?v=20150818" media="all">
+    <link rel="stylesheet" href="http://cdn.cocimg.com/assets/css/index.css?v=20151015" media="all">
+    <link href="http://cdn.cocimg.com/assets/css/module.css?v=20150906" rel="stylesheet">
+    <link href="http://cdn.cocimg.com/assets/css/style.css?v=620150818" rel="stylesheet">
+    <link href="http://cdn.cocimg.com/assets/css/navheader.css?v=20160301" rel="stylesheet" />
+    <script src="http://cdn.cocimg.com/assets/js/jquery.min.js?v=20150818" type="text/javascript"></script>
+    <script type="text/javascript" src="http://cdn.cocimg.com/assets/js/navbar.js?v=20151013"></script>
+    <script type="text/javascript" src="http://s.csbew.com/k.js"></script>
+    
+</head>
+<body>
+
+    <div class="nav-header">
+            <div class="nav-header-top">
+                <div class="nav-logo nav-fl"><a href="/"><img src="http://cdn.cocimg.com/assets/images/logo.png?v=201510272" /></a></div>
+                <div class="nav-list nav-fl">
+                    <ul>
+                        <li><a href="/news/">资讯</a></li>
+                        <li><a href="/bbs/">论坛</a></li>
+                        <li><a target="_blank" href="http://code.cocoachina.com/" title="CODE">代码</a></li>
+                        <li><a href="http://tools.cocoachina.com" title="工具" target='_blank'>工具</a></li>
+                        <li><a target="_blank" href="http://job.cocoachina.com/" title="JOB">招聘</a></li>
+                        <li><a target="_blank" href="http://cvp.cocos.com/" title="CVP">CVP</a></li>
+                        <li><a target="_blank" href="http://waikuai.cocoachina.com/" title="waikuai">外快</a></li>
+                        <li><a target="_blank" href="http://blog.cocoachina.com/" title="blog">博客</a><span class="new-item-flag">new</span></li>
+                    </ul>
+                </div>
+                <div class="nav-search nav-fl">
+                    <div class="nav-search-flag" style="display:block"><img src="http://cdn.cocimg.com/assets/img/search-icon.png?v=20150825" /></div>
+                    <div class="nav-search-form" style="display:none">
+                        <form action="/cms/plus/search.php" name="formsearch" method="post" target="_blank">
+                            <input type="hidden" name="kwtype" value="0" />
+                            <input type="hidden" name="searchtype" value="titlekeyword" />
+                            <input name="keyword" type="text" placeholder="站内搜索" />
+                            <input type="button" />
+                        </form>
+                    </div>
+                </div>
+                <div class="nav-user nav-fr">
+                    <!-- #region 未登录时显示此区域 -->
+                    <div class="nav-user-login" style="display:block">
+                        <a href="/bbs/login.php">登录</a>|
+                        <a href="/bbs/register.php">注册</a>
+                    </div>
+                    <!-- #endregion -->
+                    <!-- #region 已登录时显示此区域 -->
+                    <div class="nav-user-name" style="display:none">
+                        <div><alert></alert><img src="/assets/img/user.png" />Guest</div>
+                        <ul>
+                            <li><a href="#"><img src="/assets/img/i-man.png" />我的主页</a></li>
+                            <li><alert></alert><a href="#"><img src="/assets/img/i-mail.png" />我的消息</a></li>
+                            <li><a href="#"><img src="/assets/img/i-setting.png" />账户设置</a></li>
+                            <li><a href="index-offline.html"><img src="/assets/img/i-logout.png" />退出</a></li>
+                        </ul>
+                    </div>
+                    <!-- #endregion -->
+                </div>
+                <div class="nav-clear"></div>
+            </div>
+        <div class="nav-header-bottom">
+            <ul>
+                <li><a id="ios" href="/ios/" title="ios">iOS开发</a></li>
+                <li><a id="swift" href="/swift/" title="swift">Swift</a></li>
+                <li><a id="app_store" href="/appstore/" title="appstore">App Store研究</a></li>
+                <li><a id="design" href="/design/" title="design">产品设计</a></li>
+                <li><a id="review" href="/review/" title="review">应用</a></li>
+                <li><a id="review" href="/vr/" title="review">VR</a></li>
+                <li><a id="game" href="/game/" title="game">游戏开发</a></li>
+                <li><a id="apple" href="/apple/" title="apple">苹果相关</a></li>
+                <!-- <li><a id="cocos" href="/cocos/" title="cocos">Cocos引擎</a></li>-->
+                <!--<li><a id="webapp" href="/webapp/" title="HTML5">HTML5</a></li>-->
+                <li><a id="android" href="/android/" title="android">安卓相关</a></li>
+                <li><a id="market" href="/market/" title="market">营销推广</a></li>
+                <li><a id="industry" href="/industry/" title="industry">业界动态</a></li>
+                <li><a id="programmer" href="/programmer/" title="programmer">程序人生</a></li>
+            </ul>
+        </div>
+    </div>
+
+<script language="javascript">
+    function IsPC() {
+        var userAgentInfo = navigator.userAgent;
+        var Agents = new Array("Android", "iPhone", "SymbianOS", "Windows Phone", "iPod");
+        var flag = true;
+        for (var v = 0; v < Agents.length; v++) {
+        if (userAgentInfo.indexOf(Agents[v]) > 0) { flag = false; break; }
+        }
+        return flag;
+    }
+    if (!IsPC()){
+           window.location.href = "http://www.cocoachina.com/cms/wap.php?action=article&id=18376";
+    }
+
+</script>
+<!--middle-->
+<div class="middle clearfix">
+    <div class="m-wrap">
+        <div class="m-ad2" style="margin-top:12px;">
+            <div class="ad2-l">
+                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- CC首页底部左侧72890 -->
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:728px;height:90px"
+                     data-ad-client="ca-pub-1180518835303646"
+                     data-ad-slot="8012423965"></ins>
+                <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+            <div class="ad2-r">
+                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- CC资讯页25090 -->
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:250px;height:90px"
+                     data-ad-client="ca-pub-1180518835303646"
+                     data-ad-slot="9489157162"></ins>
+                <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+        <!--left-->
+        <div class="detail-left float-l">
+            <p class="crumbs"><a href="/" title="首页">首页</a> &gt;</span><a href="/swift" title="Swift"><span id="type_name">Swift</span></a></p>
+            <div class="detail-main">
+                <h2>Swift中协议的简单介绍</h2>
+                <div class="p-ico clearfix">
+                    <div>
+                        <span class="ml0">2016-12-19 06:04</span>
+                        <span>编辑：
+                        <a href="" id="field_author" target="_blank">CoderYQ</a></span>
+                        <span>分类：<a href="/swift/" target="_blank">Swift</a></span>
+                        <span id="source">来源：<a href="http://www.jianshu.com/p/e70bd6645d88" target="_blank">CoderYQ 投稿</a></span>
+
+                        <div class="float-r">
+                            <span id="artical_comment_cnt"><i></i></span>
+                            <span><i class="view"></i><script src="/cms/plus/count.php?view=yes&aid=18376&mid=68" language="javascript"></script></span>
+                    </div>
+                    </div>
+                </div>
+                <div class="p-ico clearfix">
+                    <p class="related float-l"><a href="/cms/tags.php?/iOS%E5%BC%80%E5%8F%91/" target="_blank">iOS开发</a><a href="/cms/tags.php?/%E7%A8%8B%E5%BA%8F%E5%91%98/" target="_blank">程序员</a><a href="/cms/tags.php?/iOS/" target="_blank">iOS</a><a href="/cms/tags.php?/Swift/" target="_blank">Swift</a></p>
+                    <input type="hidden" id="article_id"  value="18376"/>
+                </div>
+                <div class="adsbox clearfix">
+                    <div class="float-l">
+                        <div class="float-l"><b>招聘信息：</b></div>
+                        <ul class="float-l" id="invitelist" style="margin-top: 0px;">
+                            <li><a href='http://job.cocoachina.com/job/show?id=68283' target='_blank'>Mac开发</a></li><li><a href='http://job.cocoachina.com/job/show?id=68348' target='_blank'>微信书城开发</a></li><li><a href='http://job.cocoachina.com/job/show?id=68347' target='_blank'>数字图书商城开发</a></li><li><a href='http://job.cocoachina.com/job/show?id=68346' target='_blank'>iOS维护</a></li><li><a href='http://job.cocoachina.com/job/show?id=68345' target='_blank'>手机视频剪辑字幕配音工具iOS类app</a></li><li><a href='http://job.cocoachina.com/job/show?id=68344' target='_blank'>点读笔开发</a></li><li><a href='http://job.cocoachina.com/job/show?id=68343' target='_blank'>UI设计</a></li><li><a href='http://job.cocoachina.com/job/show?id=68342' target='_blank'>app推广与运营</a></li><li><a href='http://job.cocoachina.com/job/show?id=68039' target='_blank'>技术合伙人</a></li><li><a href='http://job.cocoachina.com/job/show?id=68040' target='_blank'>移动应用开发项目经理</a></li><li><a href='http://job.cocoachina.com/job/show?id=68221' target='_blank'>算法工程师</a></li>
+                            <!--<script src="http://www.cocoachina.com/bbs/new.php?action=article&fidin=26&digest=0&postdate=0&author=0&fname=0&hits=0&replies=0&pre=1&num=3&length=120&order=2" charset="gbk"></script>-->
+                        </ul>
+                    </div>
+                    <div class="float-r">
+                        <a href="javascript:void(0)" class="prev"></a>
+                        <a href="javascript:void(0)" class="next"></a>
+                    </div>
+                </div>
+                <div id="detailbody" class="field_body">
+                    <h1 style="margin: 0px; font-family: -apple-system, &#39;Helvetica Neue&#39;, Arial, &#39;PingFang SC&#39;, &#39;lucida grande&#39;, &#39;lucida sans unicode&#39;, lucida, helvetica, &#39;Hiragino Sans GB&#39;, &#39;Microsoft YaHei&#39;, &#39;WenQuanYi Micro Hei&#39;, sans-serif; line-height: 1.8; color: rgb(47, 47, 47); text-rendering: optimizelegibility; font-size: 26px; white-space: normal;"><span style="font-size: 16px;">前言</span></h1><p style="margin-top: 0px; margin-bottom: 25px; text-align: justify; word-break: break-word; color: rgb(47, 47, 47); font-family: -apple-system, &#39;Helvetica Neue&#39;, Arial, &#39;PingFang SC&#39;, &#39;lucida grande&#39;, &#39;lucida sans unicode&#39;, lucida, helvetica, &#39;Hiragino Sans GB&#39;, &#39;Microsoft YaHei&#39;, &#39;WenQuanYi Micro Hei&#39;, sans-serif; white-space: normal;">熟悉objective-c语言的同学们肯定对协议都不陌生，在Swift中苹果将<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">protocol</code>这种语法发扬的更加深入和彻底。Swift中的<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">protocol</code>不仅能定义方法还能定义属性，配合<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">extension</code>扩展的使用还能提供一些方法的默认实现，而且不仅类可以遵循协议，现在的枚举和结构体也能遵循协议了。基于此本文从<strong>&nbsp;1，协议中定义属性和方法</strong>，<strong>2，协议的继承、聚合、关联类型</strong>，<strong>3，协议的扩展</strong>，<strong>4，Swift标准库中常见的协议</strong>，<strong>5，为什么要使用协议</strong>&nbsp;5个方面结合自身的学习经验简单介绍一下这种<strong>“加强型<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">protocol</code>”</strong>的使用，入门级、属于学习总结，希望能给正在学习Swift的小伙伴们一点启发。</p><h1 style="margin: 0px; font-family: -apple-system, &#39;Helvetica Neue&#39;, Arial, &#39;PingFang SC&#39;, &#39;lucida grande&#39;, &#39;lucida sans unicode&#39;, lucida, helvetica, &#39;Hiragino Sans GB&#39;, &#39;Microsoft YaHei&#39;, &#39;WenQuanYi Micro Hei&#39;, sans-serif; line-height: 1.8; color: rgb(47, 47, 47); text-rendering: optimizelegibility; font-size: 26px; white-space: normal;"><span style="font-size: 16px;">协议中定义属性和方法</span></h1><ul style="padding: 0px; margin-bottom: 20px; margin-left: 25px; text-align: justify; word-break: break-word; color: rgb(47, 47, 47); font-family: -apple-system, &#39;Helvetica Neue&#39;, Arial, &#39;PingFang SC&#39;, &#39;lucida grande&#39;, &#39;lucida sans unicode&#39;, lucida, helvetica, &#39;Hiragino Sans GB&#39;, &#39;Microsoft YaHei&#39;, &#39;WenQuanYi Micro Hei&#39;, sans-serif; white-space: normal;" class=" list-paddingleft-2"><li><p><strong>协议的定义</strong><br/>协议为方法、属性、以及其他特定的任务需求或功能定义蓝图。协议可被类、结构体、或枚举类型采纳以提供所需功能的具体实现。满足了协议中需求的任意类型都叫做遵循了该协议（引自文档官方文档）。<br/>Swift中定义一个协议和定义枚举、结构体或者类的格式是相同的，使用<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">protocol</code>关键字：</p></li></ul><pre class="brush:js;toolbar:false">//定义一个名字为学生协议
+protocol&nbsp;Student&nbsp;{
+}</pre><ul style="padding: 0px; margin-bottom: 20px; margin-left: 25px; text-align: justify; word-break: break-word; color: rgb(47, 47, 47); font-family: -apple-system, &#39;Helvetica Neue&#39;, Arial, &#39;PingFang SC&#39;, &#39;lucida grande&#39;, &#39;lucida sans unicode&#39;, lucida, helvetica, &#39;Hiragino Sans GB&#39;, &#39;Microsoft YaHei&#39;, &#39;WenQuanYi Micro Hei&#39;, sans-serif; white-space: normal;" class=" list-paddingleft-2"><li><p>这里<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Student</code>是使用<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">protocol</code>关键字声明的一个协议，和枚举、结构体、类命名原则相似，<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Student</code>首字母大写表示在以后的使用过程中很可能会将<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Student</code>看作是一个类型使用。</p></li><li><p><strong>协议中定义属性</strong></p></li></ul><p>协议中定义属性表示遵循该协议的类型具备了某种属性，具体来说只能使用<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">var</code>关键字声明并且必须明确规定该属性是可读的<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">get</code>、还是可读可写的<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">get set</code>，另外还可以通过关键字<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">static</code>声明一个类型属性。示例如下：</p><pre class="brush:js;toolbar:false">protocol&nbsp;Student&nbsp;{
+&nbsp;&nbsp;//定义一个可读可写的&nbsp;name&nbsp;属性
+&nbsp;&nbsp;var&nbsp;name:&nbsp;String&nbsp;{&nbsp;get&nbsp;set&nbsp;}
+&nbsp;&nbsp;//定义一个可读的&nbsp;birthPlace&nbsp;属性
+&nbsp;&nbsp;var&nbsp;birthPlace:&nbsp;String&nbsp;{&nbsp;get&nbsp;}
+&nbsp;&nbsp;//定义一个类属性&nbsp;record
+&nbsp;&nbsp;static&nbsp;var&nbsp;qualification:&nbsp;String&nbsp;{get}
+}</pre><ul class=" list-paddingleft-2" ><li><p>和定义方法一样，我们只需要确定该属性具体是什么类型并且添加对应的关键字，不需要具体的实现，更不能为他们赋上初始值（类似于计算属性）。定义好属性之后，我们就可以利用属性来做点事情了。</p></li></ul><pre class="brush:js;toolbar:false">struct&nbsp;Puple:&nbsp;Student&nbsp;{
+&nbsp;&nbsp;static&nbsp;var&nbsp;qualification:&nbsp;String&nbsp;=&nbsp;"小学"
+&nbsp;&nbsp;var&nbsp;name:&nbsp;String
+&nbsp;&nbsp;var&nbsp;birthPlace:&nbsp;String&nbsp;=&nbsp;"北京"
+}
+var&nbsp;p1&nbsp;=&nbsp;Puple(name:&nbsp;"小明",&nbsp;birthPlace:&nbsp;"上海")</pre><ul class=" list-paddingleft-2" ><li><p>定义一个<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Puple</code>结构体遵循<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Student</code>协议，该结构体中必须存在协议要求声明的三个属性<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">matrikelnummer</code>、<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">name</code>、<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">birthPlace</code>,<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">static</code>修饰的类型属性必须被有初始值或者存在<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">get</code>、<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">set</code>方法。对于普通的实例属性协议并不关心是计算型属性还是存储型属性。实例中的属性同样可以被修改：</p></li></ul><pre class="brush:js;toolbar:false">var&nbsp;p1&nbsp;=&nbsp;Puple(name:&nbsp;"小明",&nbsp;birthPlace:&nbsp;"上海")
+Puple.qualification&nbsp;=&nbsp;"中学"</pre><p>看到这里有的同学可能有些疑问，<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">birthPlace</code>、<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">qualification</code>明明只有<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">get</code>方法为什么却可以修改赋值呢？其实协议中的“只读”属性修饰的是协议这种“类型“”的实例，例如下面的例子：</p><pre class="brush:js;toolbar:false">var&nbsp;s1:&nbsp;Student&nbsp;=&nbsp;p1
+s1.birthPlace&nbsp;=&nbsp;"广州"</pre><p><span style="line-height: 1.8;">虽然我们并不能像创建类的实例那样直接创建协议的实例，但是我们可以通过“赋值”得到一个协议的实例。将</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">p1</code><span style="line-height: 1.8;">的值赋值给</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">Student</code><span style="line-height: 1.8;">类型的变量</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">s1</code><span style="line-height: 1.8;">,修改</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">s1</code><span style="line-height: 1.8;">的</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">birthPlace</code><span style="line-height: 1.8;">属性时编译器就会报错：</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">birthPlace</code><span style="line-height: 1.8;">是一个只读的属性，不能被修改。如果</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">Puple</code><span style="line-height: 1.8;">中还存在</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">Student</code><span style="line-height: 1.8;">没有的属性，那么在赋值过程中</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">s1</code><span style="line-height: 1.8;">将不会存在这样的属性，尽管这样做的意义并不大，但是我们从中知道了协议中</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">get</code><span style="line-height: 1.8;">、</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">set</code><span style="line-height: 1.8;">的具体含义。</span></p><ul style="padding: 0px; margin-bottom: 20px; margin-left: 25px; text-align: justify; word-break: break-word; color: rgb(47, 47, 47); font-family: -apple-system, &#39;Helvetica Neue&#39;, Arial, &#39;PingFang SC&#39;, &#39;lucida grande&#39;, &#39;lucida sans unicode&#39;, lucida, helvetica, &#39;Hiragino Sans GB&#39;, &#39;Microsoft YaHei&#39;, &#39;WenQuanYi Micro Hei&#39;, sans-serif; white-space: normal;" class=" list-paddingleft-2"><li><p><strong>协议中定义方法</strong></p></li></ul><p>和objective-c类似，Swift中的协议可以定义类型方法或者实例方法，方法的参数不能有默认值（Swift认为默认值也是一种变相的实现），在遵守该协议的类型中具体实现方法的细节，通过类或实例调用：</p><pre class="brush:js;toolbar:false">protocol&nbsp;Student&nbsp;{
+&nbsp;&nbsp;//类方法
+&nbsp;&nbsp;static&nbsp;func&nbsp;study()
+&nbsp;&nbsp;//实例方法
+&nbsp;&nbsp;func&nbsp;changeName()
+}
+struct&nbsp;CollageStudent:&nbsp;Student&nbsp;{
+&nbsp;&nbsp;//类方法实现
+&nbsp;&nbsp;static&nbsp;func&nbsp;study()&nbsp;{
+&nbsp;&nbsp;}
+&nbsp;&nbsp;//实例方法实现
+&nbsp;&nbsp;func&nbsp;changeName()&nbsp;{
+&nbsp;&nbsp;}
+}
+//方法的调用
+CollageStudent.study()
+var&nbsp;c1&nbsp;=&nbsp;CollageStudent()
+c1.changeName()</pre><p>注意：当我们在结构体中的方法修改到属性的时候需要在方法前面加上关键字<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">mutating</code>表示该属性能够被修改（如果是类不需要添加<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">mutating</code>关键字）,这样的方法叫做：<strong>异变方法</strong>，和&nbsp;<strong>“在实例方法中修改值类型”</strong>&nbsp;的处理是一样的。</p><pre class="brush:js;toolbar:false">protocol&nbsp;Student&nbsp;{
+&nbsp;&nbsp;mutating&nbsp;func&nbsp;changeName()
+}
+struct&nbsp;CollageStudent:&nbsp;Student&nbsp;{
+&nbsp;&nbsp;mutating&nbsp;func&nbsp;changeName()&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.name&nbsp;=&nbsp;"小明"
+&nbsp;&nbsp;}
+}
+var&nbsp;c1&nbsp;=&nbsp;CollageStudent()
+c1.changeName()</pre><ul class=" list-paddingleft-2" ><li><p><strong style="line-height: 1.8;">协议中的初始化器</strong></p></li></ul><p>我们可以在协议中定义遵循协议的类型需要实现的指定初始化器（构造函数）或者便捷初始化器。</p><pre class="brush:js;toolbar:false">protocol&nbsp;Pet&nbsp;{
+&nbsp;&nbsp;init(name:&nbsp;String)
+}
+class&nbsp;Cat:&nbsp;Pet&nbsp;{
+&nbsp;&nbsp;var&nbsp;name:&nbsp;String&nbsp;=&nbsp;"Cat"
+&nbsp;&nbsp;required&nbsp;init(name:&nbsp;String)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.name&nbsp;=&nbsp;name
+&nbsp;&nbsp;}
+}</pre><p><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Cat</code>由于遵循了<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Pet</code>协议，应该用<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">required</code>关键字修饰初始化器的具体实现。<br/>如果一个类既继承了某个类，而且遵循了一个或多个协议，我们应该将父类放在最前面，然后依次用逗号排列。</p><pre class="brush:js;toolbar:false">class&nbsp;SomeClass:&nbsp;OneProtocol,&nbsp;TwoProtocol&nbsp;{
+}</pre><p>这是因为Swift中类的继承是单一的，但是类可以遵守多个协议，因此为了突出其单一父类的特殊性，我们应该将继承的父类放在最前面，将遵守的协议依次放在后面。</p><ul class=" list-paddingleft-2" ><li><p><strong>多个协议重名方法调用冲突</strong></p></li></ul><p>由于在Swift中并没有规定不同的协议内方法不能重名（这样的规定也是不合理的）。因此我们在自定义多个协议中方法重名的情况是可能出现的，比如有<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">TextOne</code>、<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">TextTwo</code>两个协议，定义如下：</p><pre class="brush:js;toolbar:false">protocol&nbsp;TextOne&nbsp;{
+&nbsp;&nbsp;func&nbsp;text()&nbsp;->&nbsp;Int
+}
+protocol&nbsp;TextTwo&nbsp;{&nbsp;&nbsp;
+&nbsp;&nbsp;func&nbsp;text()&nbsp;->&nbsp;String
+}</pre><p>这两个协议中的<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">text()</code>方法名相同返回值不同，如果存在一个类型<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Person</code>同时遵守了<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">TextOne</code>&nbsp;和<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">TextTwo</code>，在<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Person</code>实例调用方法的时候就会出现歧义。</p><pre class="brush:js;toolbar:false">struct&nbsp;Person:&nbsp;TextOne,&nbsp;TextTwo&nbsp;{
+&nbsp;&nbsp;func&nbsp;text()&nbsp;->&nbsp;Int&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;10
+&nbsp;&nbsp;}
+&nbsp;&nbsp;func&nbsp;text()&nbsp;->&nbsp;String&nbsp;{&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;"hello"
+&nbsp;&nbsp;}
+}</pre><pre class="brush:js;toolbar:false">let&nbsp;p1&nbsp;=&nbsp;Person()
+//尝试调用返回值为Int的方法
+let&nbsp;num&nbsp;=&nbsp;p1.text()
+//尝试调用返回值为String的方法
+let&nbsp;string&nbsp;=&nbsp;p1.text()</pre><p>上面的调用肯定是无法通过的，因为编译器无法知道同名<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">text()</code>方法到底是哪个协议中的方法，那么出现这种情况的根本原因在于调用哪个协议的<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">text()</code>不确定，因此我们需要指定调用特定协议的<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">text()</code>方法，改进后的代码如下：</p><pre class="brush:js;toolbar:false">//尝试调用返回值为Int的方法
+let&nbsp;num&nbsp;=&nbsp;(p1&nbsp;as&nbsp;TextOne).text()
+//尝试调用返回值为String的方法
+let&nbsp;string&nbsp;=&nbsp;(p1&nbsp;as&nbsp;TextTwo).text()</pre><p>也可以理解为在进行调用前将<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">p1</code>常量进行类型转换。</p><h1 style="margin: 0px; font-family: inherit; line-height: 1.8; color: inherit; text-rendering: optimizelegibility; font-size: 26px;"><span style="font-size: 16px;">协议的继承、聚合、关联类型</span></h1><ul class=" list-paddingleft-2" ><li><p><strong>协议的继承</strong></p></li></ul><p>协议可以继承一个或者多个其他协议并且可以在它继承的基础之上添加更多要求。协议继承的语法与类继承的语法相似，选择列出多个继承的协议，使用逗号分隔：</p><pre class="brush:js;toolbar:false">protocol&nbsp;OneProtocol&nbsp;{&nbsp;&nbsp;
+}
+protocol&nbsp;TwoProtocol&nbsp;{
+}
+//定义一个继承子OneProtocol&nbsp;和&nbsp;TwoProtocol协议的新的协议:&nbsp;ThreeProtocol
+protocol&nbsp;ThreeProtocol:&nbsp;OneProtocol,&nbsp;TwoProtocol&nbsp;{
+}</pre><p>如上所示，任何遵守了<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">ThreeProtocol</code>协议的类型都应该同时实现<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">OneProtocol</code>&nbsp;和&nbsp;<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">TwoProtocol</code>的要求必须实现的方法或属性（引自官方文档，概念比较简单）。</p><ul class=" list-paddingleft-2" ><li><p><strong>协议的聚合</strong></p></li></ul><p>日常开发中要求一个类型同时遵守多个协议是很常见的，除了使用协议的继承外我们还可以使用形如<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">OneProtocol &nbsp;& TwoProtocol</code>的形式实现协议聚合（组合）复合多个协议到一个要求里。例如：</p><pre class="brush:js;toolbar:false">//协议聚合成临时的类型
+typealias&nbsp;Three&nbsp;=&nbsp;TwoProtocol&nbsp;&&nbsp;OneProtocol
+//协议聚合成为参数的类型
+func&nbsp;text(paramter:&nbsp;OneProtocol&nbsp;&&nbsp;TwoProtocol)&nbsp;{
+}</pre><p>一个很常见的例子：定义<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">text</code>函数的参数类型使用了协议的聚合，在这里我们并不关心<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">paramter</code>是什么类型的参数，只要它遵循这两个要求的协议即可。</p><ul class=" list-paddingleft-2" ><li><p><strong>继承和聚合在使用上的区别</strong></p></li></ul><p>善于思考的同学可以发现，要实现上面的&nbsp;<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">paramter参数的类型是遵守OneProtocol 和 TwoProtoco</code>的效果，完全可以使用协议的继承，新定义一个协议<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">ThreeProtocol</code>继承自<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">OneProtocol</code>&nbsp;和<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">TwoProtocol</code>，然后指定<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">paramter</code>参数的类型是<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">ThreeProtocol</code>类型。那么这两种方法有何区别呢？首先<strong>协议的继承</strong>是定义了一个全新的协议，我们是希望它能够“大展拳脚”得到普遍使用。而<strong>协议的聚合</strong>不一样，它并没有定义新的固定协议类型，相反，它只是定义一个临时的拥有所有聚合中协议要求组成的局部协议，很可能是“一次性需求”，使用<strong>协议的聚合</strong>保持了代码的简洁性、易读性，同时去除了定义不必要的新类型的繁琐，并且定义和使用的地方如此接近，见明知意，也被称为<strong>匿名协议聚合</strong>。但是使用了<strong>匿名协议聚合</strong>能够表达的信息就少了一些，所以需要开发者斟酌使用。</p><ul class=" list-paddingleft-2" ><li><p><strong>协议的检查</strong></p></li></ul><p>如何检查某个类型是否遵循了特定的协议？：使用关键字&nbsp;<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">is</code>，同时该运算符会返回一个Bool值用于判断条件是否成立。</p><pre class="brush:js;toolbar:false">struct&nbsp;Person:&nbsp;OneProtocol&nbsp;{
+}
+let&nbsp;p1&nbsp;=&nbsp;Person()
+if&nbsp;(p1&nbsp;is&nbsp;OneProtocol){&nbsp;//可以理解为：p1&nbsp;是一个遵守了OneProtocol协议类型的实例
+&nbsp;&nbsp;print("yes")
+}</pre><p>如何让定义的协议只能被类遵守？：使用关键字<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">class</code>，该关键字修饰之后表示协议只能被类遵守，如果有枚举或结构体尝试遵守会报错。</p><pre class="brush:js;toolbar:false">//只能被类遵守的协议
+protocol&nbsp;FourProtocol:&nbsp;class&nbsp;,ThreeProtocol&nbsp;{
+}
+//此处报错
+struct&nbsp;Person:&nbsp;FourProtocol&nbsp;{
+}
+class&nbsp;Perple:&nbsp;FourProtocol&nbsp;{
+}</pre><ul class=" list-paddingleft-2" ><li><p><strong>关联类型</strong></p></li></ul><p>协议的关联类型指的是根据使用场景的变化，如果协议中某些属性存在“逻辑相同的而类型不同”的情况，可以使用关键字<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">associatedtype</code>来为这些属性的类型声明“关联类型”。</p><pre class="brush:js;toolbar:false">protocol&nbsp;WeightCalculable&nbsp;{
+&nbsp;&nbsp;//为weight&nbsp;属性定义的类型别名
+&nbsp;&nbsp;associatedtype&nbsp;WeightType
+&nbsp;&nbsp;var&nbsp;weight:&nbsp;WeightType&nbsp;{&nbsp;get&nbsp;}
+}</pre><p><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">WeightCalculable</code><span style="line-height: 1.8;">是一个“可称重”协议，</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">weight</code><span style="line-height: 1.8;">属性返回遵守该协议具体类型的实例的重量。这里我们使用</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">associatedtype</code><span style="line-height: 1.8;">为该属性的类型定义了一个别名</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">WeightType</code><span style="line-height: 1.8;">，换言之在</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">WeightCalculable</code><span style="line-height: 1.8;">中并不关心</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">weight</code><span style="line-height: 1.8;">的类型是</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">Int</code><span style="line-height: 1.8;">&nbsp;还是</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">Double</code><span style="line-height: 1.8;">或者是其他类型,他只是简单的告诉我们返回的类型是</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">WeightType</code><span style="line-height: 1.8;">，至于</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">WeightType</code><span style="line-height: 1.8;">到底是什么类型由遵守该协议的类中自己去定义。那么这样做的好处是什么呢？</span></p><pre class="brush:js;toolbar:false">//定义手机结构体
+struct&nbsp;MobilePhone:&nbsp;WeightCalculable&nbsp;{
+&nbsp;&nbsp;typealias&nbsp;WeightType&nbsp;=&nbsp;Double
+&nbsp;&nbsp;var&nbsp;weight:&nbsp;WeightType
+}
+let&nbsp;iPhone7&nbsp;=&nbsp;MobilePhone(weight:&nbsp;0.138)
+//定义汽车结构体
+struct&nbsp;Car:&nbsp;WeightCalculable&nbsp;{
+&nbsp;&nbsp;typealias&nbsp;WeightType&nbsp;=&nbsp;Int
+&nbsp;&nbsp;var&nbsp;weight:&nbsp;WeightType
+}
+let&nbsp;truck&nbsp;=&nbsp;Car(weight:&nbsp;3000_000)</pre><p><span style="line-height: 1.8;"></span><span style="line-height: 1.8;">如上所示：</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">MobilePhone</code><span style="line-height: 1.8;">、</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">Car</code><span style="line-height: 1.8;">类型都遵守了</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">WeightCalculable</code><span style="line-height: 1.8;">协议，都能被称重，但是手机由于结构精密、体型小巧，小数点后面的数字对于称重来说是必不可少的，所以使用了</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">Double</code><span style="line-height: 1.8;">类型，返回</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">0.138千克</code><span style="line-height: 1.8;">即</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">138克</code><span style="line-height: 1.8;">，但是对于汽车这样的庞然大物在称重时如果还计较小数点后面的数字就显得没有意义了，所以使用</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">Int</code><span style="line-height: 1.8;">类型，表示</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">3000千克</code><span style="line-height: 1.8;">也就是</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">3吨</code><span style="line-height: 1.8;">。</span></p><p>从上面的例子可以很好的看出由于<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">MobilePhone</code>、<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Car</code>称重时逻辑是一样的，但是对于<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">weight</code>属性的返回值要求不一样，如果仅仅因为返回值类型的不同定义两个类似的协议一个是<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Int</code>类型另外一个是<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Double</code>类型，这样做显然是重复的、不合适的。所以<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">associatedtype</code>在这种情况下就发挥出作用了，他让开发者在遵守协议时根据需求去定义返回值的类型，而不是在协议中写死。唯一要注意的是：一定要在遵守该协议的类型中使用<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">typealias</code>规定具体的类型。不然编译器就报错了。</p><h1 style="margin: 0px; font-family: inherit; line-height: 1.8; color: inherit; text-rendering: optimizelegibility; font-size: 26px;"><span style="font-size: 16px;">协议的扩展</span></h1><p>协议的扩展是协议中很重要的一部分内容，主要体现在以下两个方面：</p><ul class=" list-paddingleft-2" ><li><p><strong>扩展协议的属性和方法</strong></p></li></ul><p>我们通过一个常见的例子说明一下：</p><pre class="brush:js;toolbar:false">protocol&nbsp;Score&nbsp;{
+&nbsp;&nbsp;var&nbsp;math:&nbsp;Int&nbsp;{&nbsp;get&nbsp;set}
+&nbsp;&nbsp;var&nbsp;english:&nbsp;Int&nbsp;{get&nbsp;set}
+&nbsp;&nbsp;func&nbsp;mathPercent()&nbsp;->&nbsp;Double
+}</pre><p>首先定义一个<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Score</code>协议，里面有两个<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Int</code>类型的属性<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">math</code>、<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">english</code>和一个计算数学所占分数的比例的方法<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">mathPercent</code>。</p><pre class="brush:js;toolbar:false">struct&nbsp;Puple:&nbsp;Score&nbsp;{
+&nbsp;&nbsp;var&nbsp;math:&nbsp;Int
+&nbsp;&nbsp;var&nbsp;english:&nbsp;Int
+&nbsp;&nbsp;func&nbsp;mathPercent()&nbsp;->&nbsp;Double&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;Double(math)&nbsp;/&nbsp;Double(math&nbsp;+&nbsp;english)
+&nbsp;&nbsp;}
+}</pre><p>定义<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Puple</code>遵守该协议，实现了必要的属性和方法。</p><pre class="brush:js;toolbar:false">let&nbsp;p1&nbsp;=&nbsp;Puple(math:&nbsp;90,&nbsp;english:&nbsp;80)
+s1.mathPercent()</pre><p>通过上面的代码可以计算出<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">s1</code>中数学所占的比例，但是设想一下如果还有很多个类似<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Puple</code>结构体的类型都需要遵守该协议，都需要默认实现<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">mathPercent</code>&nbsp;方法计算出自己的数学分数所占的比例，还是按照上面的写法代码量就很大而且很冗杂了。问题的关键在于：任何遵守<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Score</code>协议类型的<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">mathPercent</code>计算逻辑是不变的，而且需要默认实现。那么我们如何轻松的实现这样的效果呢，答案是：为<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Score</code>添加方法的扩展。</p><pre class="brush:js;toolbar:false">extension&nbsp;Score&nbsp;{
+&nbsp;&nbsp;func&nbsp;mathPercent()&nbsp;->&nbsp;Double&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;Double(math)&nbsp;/&nbsp;Double(math&nbsp;+&nbsp;english)
+&nbsp;&nbsp;}
+}</pre><p>将<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">mathPercent</code>的具体实现写在协议的扩展里面，就能为所有的遵守<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Score</code>的类型提供<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">mathPercent</code>默认的实现。</p><pre class="brush:js;toolbar:false">struct&nbsp;CollageStudent:&nbsp;Score&nbsp;{
+&nbsp;&nbsp;var&nbsp;math:&nbsp;Int
+&nbsp;&nbsp;var&nbsp;english:&nbsp;Int
+}
+let&nbsp;c1&nbsp;=&nbsp;CollageStudent(math:&nbsp;80,&nbsp;english:&nbsp;80)
+c1.mathPercent()</pre><p>如此就能起到“不实现<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">mathPercent</code>方法也能计算出数学所占分数的比例”的效果了。此语法在Swift中有一个专业术语叫做：<strong>default implementation</strong>&nbsp;即默认实现。包括计算属性和方法的默认实现，但是不支持存储属性，如果遵循类型给这个协议的要求提供了它自己的实现，那么它就会替代扩展中提供的默认实现。<br/>通过这样的语法，我们不仅能为自定义的协议提供扩展，还能为系统提供的协议添加扩展，例如，为<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">CustomStringConvertible</code>添加一个计算属性默认实现的扩展：</p><pre class="brush:js;toolbar:false">extension&nbsp;CustomStringConvertible&nbsp;{
+&nbsp;&nbsp;var&nbsp;customDescription:&nbsp;String&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;"YQ"&nbsp;+&nbsp;description
+&nbsp;&nbsp;}
+}</pre><ul class=" list-paddingleft-2" ><li><p><strong>为存在的类型添加协议遵守</strong></p></li></ul><p>扩展一个已经存在的类型来采纳和遵循一个新的协议，无需访问现有类型的源代码。扩展可以添加新的属性、方法和下标到已经存在的类型，并且因此允许你添加协议需要的任何需要（引自文档翻译）。<br/>简单的来说我们可以对存在的类型（尤其是系统的类型）添加协议遵守。尽管这更像是对“类型的扩展”，但是官方文档将这部分放在了协议的扩展中。</p><pre class="brush:js;toolbar:false">extension&nbsp;Double&nbsp;:&nbsp;CustomStringConvertible&nbsp;{
+&nbsp;&nbsp;///&nbsp;A&nbsp;textual&nbsp;representation&nbsp;of&nbsp;the&nbsp;value.
+&nbsp;&nbsp;public&nbsp;var&nbsp;description:&nbsp;String&nbsp;{&nbsp;get&nbsp;}
+}</pre><p>上面的代码就是Swift标准库中对于<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Double</code>类型添加的一个协议遵守。除了添加系统协议的遵守，我们还可以添加自定义的协议的遵守，其方法都是一样的，这里就不太赘述了。</p><ul class=" list-paddingleft-2" ><li><p><strong>总结</strong></p></li></ul><p>通过协议的扩展提供协议中某些属性和方法的默认实现，将公共的代码和属性统一起来极大的增加了代码的复用，同时也增加了协议的灵活性和使用范围，这样的协议不仅仅是一系列接口的规范，还能提供相应的逻辑，是面向协议编程的基础。</p><p><strong><span style="font-size: 16px; color: inherit; font-family: inherit; line-height: 1.8;">Swift标准库中常见的协议</span></strong></p><p>学习完协议的基础语法，我们大致熟悉一下Swift标准库中提供的协议。<br/></p><p style="text-align:center"><img src="http://cc.cocimg.com/api/uploads/20161218/1482058044909031.png" title="1482058044909031.png" alt="2474121-3141e32cfd89e222.png"/></p><p style="text-align: center;">55个标准库协议</p><p><br/>Swift标准库为我们提供了55种协议，他们的命名很有特点，基本是以"Type"、“able”、“Convertible”结尾，分别表示该协议“可以被当做XX类型”、“具备某种能力或特性”、“能够进行改变或变换”。因此在自定义协议时应该尽可能遵守苹果的命名规则，便于开发人员之间的高效合作。下面介绍一下常见的几种协议：</p><ul class=" list-paddingleft-2" ><li><p><strong>Equatable</strong></p></li></ul><p><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Equatable</code>是和<strong>比较相关</strong>的协议，遵守该协议表示实例<strong>能够用于相等的比较</strong>，需要重载<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">==</code>运算符。</p><pre class="brush:js;toolbar:false">struct&nbsp;Student:&nbsp;Equatable&nbsp;{
+&nbsp;&nbsp;var&nbsp;math:&nbsp;Int
+&nbsp;&nbsp;var&nbsp;english:&nbsp;Int
+}
+//重载&nbsp;==&nbsp;运算符
+func&nbsp;==&nbsp;(s1:&nbsp;Student,&nbsp;s2:&nbsp;Student)&nbsp;->&nbsp;Bool&nbsp;{
+&nbsp;&nbsp;return&nbsp;s1.math&nbsp;==&nbsp;s2.math&nbsp;&&&nbsp;s1.english&nbsp;==&nbsp;s2.english
+}</pre><p><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">Student</code><span style="line-height: 1.8;">遵守</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">Equatable</code><span style="line-height: 1.8;">并且重载了</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">==</code><span style="line-height: 1.8;">运算符后就能直接比较两个学生的成绩是否相等了。</span></p><pre class="brush:js;toolbar:false">let&nbsp;s1&nbsp;=&nbsp;Student(math:&nbsp;80,&nbsp;english:&nbsp;60)
+let&nbsp;s2&nbsp;=&nbsp;Student(math:&nbsp;70,&nbsp;english:&nbsp;90)
+s1&nbsp;==&nbsp;s2&nbsp;//false</pre><p>值得注意的是，由于重载<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">==</code>运算符是遵守<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Equatable</code>协议后要求我们实现的，因此重载方法应该紧跟在遵守该协议的类型定义后，中间不能有其他的代码，否则就报错了。</p><ul class=" list-paddingleft-2" ><li><p><strong>Comparable</strong></p></li></ul><p><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">Comparable</code>是和<strong>比较相关</strong>的第二个协议，遵守该协议表示实例<strong>能够进行比较</strong>，需要重载<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;"><</code>运算符。</p><pre class="brush:js;toolbar:false">struct&nbsp;Student:&nbsp;Comparable{
+&nbsp;&nbsp;var&nbsp;math:&nbsp;Int
+&nbsp;&nbsp;var&nbsp;english:&nbsp;Int
+}
+//重载&nbsp;<&nbsp;运算符
+func&nbsp;<&nbsp;(s1:&nbsp;Student,&nbsp;s2:&nbsp;Student)&nbsp;->&nbsp;Bool&nbsp;{
+&nbsp;&nbsp;return&nbsp;(s1.math&nbsp;+&nbsp;s1.english)&nbsp;<&nbsp;(s2.math&nbsp;+&nbsp;s2.english)
+}
+let&nbsp;s1&nbsp;=&nbsp;Student(math:&nbsp;80,&nbsp;english:&nbsp;60)
+let&nbsp;s2&nbsp;=&nbsp;Student(math:&nbsp;70,&nbsp;english:&nbsp;90)
+s1&nbsp;<&nbsp;s2&nbsp;//true</pre><ul class=" list-paddingleft-2" ><li><p><strong>CustomStringConvertible</strong></p></li></ul><p><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">CustomStringConvertible</code>提供了一种<strong>用文本表示一个对象或者结构</strong>的方式,可以在任何遵守该协议的类型中自定义表示结构的文本，需要覆盖<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">description</code>属性。</p><pre class="brush:js;toolbar:false">struct&nbsp;Student:&nbsp;CustomStringConvertible{
+&nbsp;&nbsp;var&nbsp;math:&nbsp;Int
+&nbsp;&nbsp;var&nbsp;english:&nbsp;Int
+&nbsp;&nbsp;var&nbsp;description:&nbsp;String&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;"Your&nbsp;math:"&nbsp;+&nbsp;String(math)&nbsp;+&nbsp;",&nbsp;english:"&nbsp;+&nbsp;String(english)
+&nbsp;&nbsp;}
+}
+let&nbsp;s1&nbsp;=&nbsp;Student(math:&nbsp;80,&nbsp;english:&nbsp;60)
+print(s1)&nbsp;//&nbsp;Your&nbsp;math:80,&nbsp;english:60</pre><ul class=" list-paddingleft-2" ><li><p><strong>ExpressibleByArrayLiteral</strong></p></li></ul><p><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">ExpressibleByArrayLiteral</code>提供了<strong>使用数组文本初始化的类型</strong>的能力，具体来说使用逗号分隔的值、实例、字面值列表，方括号以创建数组文本。遵守该协议需要实现<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">init(arrayLiteral elements: Person.Element...)</code>方法。</p><pre class="brush:js;toolbar:false">struct&nbsp;Person:&nbsp;ExpressibleByArrayLiteral&nbsp;{
+&nbsp;&nbsp;var&nbsp;name:&nbsp;String&nbsp;=&nbsp;""
+&nbsp;&nbsp;var&nbsp;job:&nbsp;String&nbsp;=&nbsp;""
+&nbsp;&nbsp;typealias&nbsp;Element&nbsp;=&nbsp;String
+&nbsp;&nbsp;init(arrayLiteral&nbsp;elements:&nbsp;Person.Element...)&nbsp;{&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;elements.count&nbsp;==&nbsp;2&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;=&nbsp;elements[0]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;job&nbsp;=&nbsp;elements[1]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;}
+}
+let&nbsp;p1:&nbsp;Person&nbsp;=&nbsp;["jack",&nbsp;"teacher"]
+print(p1.name)&nbsp;//jack
+print(p1.job)&nbsp;//teacher</pre><p>上面的代码用到了之前关联类型，通过遵守ExpressibleByArrayLiteral，现在的Person就可以使用数组直接创建实例了。类似的协议还有ExpressibleByDictionaryLiteral、ExpressibleByStringLiteral、ExpressibleByBooleanLiteral 、ExpressibleByIntegerLiteral等等，相信大家通过名称就能大概猜出具体作用，由于篇幅有限这里就不再赘述了。</p><p><strong><span style="font-size: 16px; color: inherit; font-family: inherit; line-height: 1.8;">为什么要使用协议</span></strong></p><ul class=" list-paddingleft-2" ><li><p><strong>协议可以作为类型使用</strong></p></li></ul><p>协议作为一种类型是苹果在Swift中提出的，并且在官方文档中还为我们具体指出了可以将协议当做类型使用的场景：</p><p>1，在函数、方法或者初始化器里作为形式参数类型或者返回类型；</p><p>2，作为常量、变量或者属性的类型；</p><p>3，作为数组、字典或者其他存储器的元素的类型。</p><ul class=" list-paddingleft-2" ><li><p><strong>协议可以解决面向对象中一些棘手的问题</strong><br/></p></li></ul><p style="text-align:center"><img src="http://cc.cocimg.com/api/uploads/20161218/1482058327565094.png" title="1482058327565094.png" alt="2474121-48373a5702d649ef.png"/></p><p style="text-align: center;">宠物类图</p><p>如图所示的类结构图中<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">麻雀</code>在宠物类图中的位置显得比较尴尬，之所以尴尬是因为<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">麻雀</code>作为一种鸟类，应该继承<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">鸟</code>，但是如果继承了<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">鸟</code>，就相当于默认了<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">麻雀</code>是一种<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">宠物</code>，这显然是不和逻辑的。解决此问题的一般方法如下：<br/></p><p style="text-align:center"><img src="http://cc.cocimg.com/api/uploads/20161218/1482058389814221.png" title="1482058389814221.png" alt="2474121-645062500b1cd422.png"/></p><p style="text-align: center;">宠物类图</p><p>乍一看好像解决了这样的问题，但是仔细想由于Swift只支持单继承，<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">麻雀</code>没有继承<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">鸟</code>类就无法体现<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">麻雀</code>作为一种鸟拥有的特性和方法（比如飞翔），如果此时出现一个新的<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">飞机</code>类，虽然<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">飞机</code>和<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">宠物</code>之间没有任何联系，但是<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">飞机</code>和<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">鸟</code>是由很多共同特性的（比如飞翔），这样的特性该如何体现呢？答案还是新建一个类成为<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">动物</code>和<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">飞机</code>的父类。面向对象就是这样一层一层的向上新建父类最终得到一个“超级父类”在OC和Swift中是<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">NSObject</code>，尽管问题得到了解决，但是<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">麻雀</code>与<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">鸟</code>、<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">飞机</code>与<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">鸟</code>之间的共性并没有得到很好的体现。而协议的出现正是为了解决这类问题。<br/></p><p style="text-align:center"><img src="http://cc.cocimg.com/api/uploads/20161218/1482058440369111.png" title="1482058440369111.png" alt="2474121-f3fb7def9e9be687.png"/></p><p style="text-align: center;">宠物类图</p><p><span style="line-height: 1.8;">实际上宠物类图中包括</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">动物</code><span style="line-height: 1.8;">、</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">鸟</code><span style="line-height: 1.8;">、</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">飞机</code><span style="line-height: 1.8;">等类之间的关系就应该是如上图所示的继承关系。使用协议将“宠物”、“飞翔”等关系看作是一种特性，或者是从另一个维度描述这种类别，更重要的是使用协议并不会打破原有类别之间继承的父子关系。和飞翔相关的代码统一放在</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">Flyable</code><span style="line-height: 1.8;">中，需要“飞翔”这种能力遵守该协议；和宠物相关的代码统一放在</span><code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-radius: 3px; border: none; white-space: pre-wrap; background-color: rgb(253, 246, 227);">PetType</code><span style="line-height: 1.8;">中，需要成为宠物遵守该协议。这些协议灵活多变结合原有的面向对象类之间固有的继承关系，完美的描述了这个世界。这幅包含了协议的宠物类图是本人在学习中印象最深刻的，分享出来与大家共勉。</span></p><p>Swift中的协议更多的时候是在描述某种属性，是否应该将“宠物”设计成一个类或者是一个协议，应该根据当前项目的需求。如果你的世界没有<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">麻雀</code>、<code style="padding: 2px 4px; font-family: Menlo, Monaco, Consolas, &#39;Courier New&#39;, monospace; font-size: 12px; color: rgb(101, 123, 131); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: rgb(253, 246, 227); border: none; white-space: pre-wrap;">飞机</code>，那么将“宠物”设计成一个类也是未尝不可甚至是非常合理的，这点需要我们仔细思考。</p><p>学习使用协议就不得不提到通过协议语法延伸出来的<strong>面向协议编程范式</strong>，苹果提出Swift是一门支持面向协议编程的语言，甚至提倡我们通过协议、结构体代替部分类的使用，可见协议这种语法以及面向协议编程思想在Swift中是多么的重要。在这里由于本人水平有限就不对此展开讨论，不过在学习中收集了几篇关于“使用协议编程”方面的文章，有兴趣的同学可以参考一下。<br/><a href="http://www.jianshu.com/p/fc105512bf40" target="_blank" style="color: rgb(64, 148, 199); text-decoration: none;">1，从 Swift 的面向协议编程说开去</a><br/><a href="http://www.cocoachina.com/swift/20160107/14868.html" target="_blank" style="color: rgb(64, 148, 199); text-decoration: none;">2，我从55个Swift标准库协议中学到了什么?</a><br/><a href="http://www.jianshu.com/p/70663bdeabe7" target="_blank" style="color: rgb(64, 148, 199); text-decoration: none;">3，Swift面向协议编程初探</a></p><ul class=" list-paddingleft-2" ><li><p><strong>文章最后</strong></p></li></ul><p>以上就是本人前段时间学习心得，示例代码在Swift3.0语法下都是编译通过的，知识点比较杂，部分描述引自官方的文档，另外协议作为一种强大的语法肯定还有很多值得我们去探索，本文列出的知识点仅仅涵括了部分内容。如果文中有任何纰漏或错误欢迎在评论区留言指出，本人将在第一时间修改过来；喜欢我的文章，可以关注我以此促进交流学习。</p>
+                </div>
+                <div id="page" style="padding:0"></div>
+
+                <div class="wx_article">
+                    <div class="article_weixin">
+                        <img src="http://cdn.cocimg.com/cms/templets/images/article_weixin.jpg" width="131" height="131" alt="搜索CocoaChina微信公众号：CocoaChina"/>
+                        <div class="article_scan">微信扫一扫</div>
+                        <div class="article_txt" ><span style="color:#999999">订阅每日移动开发及APP推广热点资讯<br/>公众号：</span>CocoaChina</div>
+                    </div>
+                </div>
+
+               <div class="clearfix tgbox">
+                    <a href="http://www.cocoachina.com/deliver.php" class="tg float-l" target="_blank">我要投稿</a>&nbsp;&nbsp;
+                    <a style="margin-left:10px"  href="javascript:void(0)" onClick="add_favors(18376,'Swift中协议的简单介绍')" class="tg float-l" >收藏文章</a>
+                    <div class="share float-r">分享到：
+                        <div class="bdsharebuttonbox" id="sharediv"><a href="#" class="bds_more" data-cmd="more"></a> <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a> <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a></div>
+                    </div>
+                </div>
+
+
+                <a class="zanbox" href="javascript:void(0)" id="zanbox" onClick="postDigg('good',18376)" title="哎呦，不错噢，赞一个" >
+                    <strong id="newdigg">
+                     <script src="/cms/plus/count.php?view=yes&digg_id=18376&mid=68" language="javascript"></script>
+                    </strong>
+                </a>
+            </div>
+
+            <div class="article-prev">上一篇：<a href='/swift/20161206/18292.html'>代码组织和 FRAMEWORK</a> </div>
+            <div class="article-next"></div>
+
+            <!--相关资讯-->
+            <div class="part-wrap clearfix">
+                <h3>相关资讯</h3>
+                <ul class="info-list clearfix">
+                    <li>
+                        <a href="/swift/20161206/18292.html" target="_blank" title="Apple 为了 iOS 平台的安全性考虑，是不允许动态链接非系统的框架的。因此在 app 开发中我们所使用的第三方框架如果是以库文件的方式提供的话，一定都是需要链接并打包进最后的二进制可执行文件中">代码组织和 FRAMEWORK</a>
+                     </li>
+<li>
+                        <a href="/swift/20161202/18258.html" target="_blank" title="重构是一个持续性的过程。然而，在频繁的重构过程中还需要保证开发的功能可用。如果不能保证，代码就不能被定期部署，这会使得你的代码与团队中其他人的代码保持同步变得更加困难。
+">切片职责</a>
+                     </li>
+<li>
+                        <a href="/swift/20161201/18251.html" target="_blank" title="最近凑了几个热心的小伙伴写一些Swift的新手demo（两周后应该能和大家见面了），我参与了review。于是借demo里的代码总结一下新手写Swift要注意的问题，尤其是从oc转到用swift写的开发者。">Swift Review总结一：从 Swift Style 开始</a>
+                     </li>
+<li>
+                        <a href="/swift/20161128/18202.html" target="_blank" title="简单地说，Protocol Buffers 就是一种轻量高效的结构化数据交换格式，语言无关、平台无关、可扩展。理解地直白粗暴一点就是“更厉害更面向未来的 JSON”，那么接下来我们就将通过 Swift 官方实现的 ">Swift Protobuf 初探 —— 继 XML 后，JSON 也要被淘汰了吗</a>
+                     </li>
+<li>
+                        <a href="/swift/20161201/18198.html" target="_blank" title="TangramKit是iOS系统下用Swift编写的第三方界面布局框架。他集成了iOS的AutoLayout和SizeClass以及Android的五大容器布局体系以及HTML/CSS中的float和flex-box的布局功能和思想，目的是为iOS开发人员提供一套功能强">iOS界面布局的核心以及TangramKit介绍</a>
+                     </li>
+<li>
+                        <a href="/swift/20161125/18182.html" target="_blank" title="10个简书实用的Swift开发小技巧，让你的代码更优雅。">Swift高手进阶 - 10个技巧</a>
+                     </li>
+<li>
+                        <a href="/swift/20161121/18144.html" target="_blank" title="文章标题谈到了面向协议编程(下文简称 POP)，是因为前几天阅读了一篇讲 Swift 中 POP 的文章。本文会以此为出发点，聊聊相关的概念，比如接口、mixin、组合模式、多继承等，同时也会借助各种语言中">从 Swift 的面向协议编程说开去</a>
+                     </li>
+<li>
+                        <a href="/swift/20161118/18132.html" target="_blank" title="设计良好的Swift函数式程序应该具有的一些特质：
+模块化
+对可变状态的谨慎处理
+类型
+避免使用程序状态和可变对象，是降低程序复杂度的有效方式之一，而这也正是函数式编程的精髓。
+">《函数式Swift》读书拾遗</a>
+                     </li>
+<li>
+                        <a href="/swift/20161118/18131.html" target="_blank" title="这是一篇关于Swift协议与扩展区别和使用的简单介绍。">Swift协议和扩展</a>
+                     </li>
+<li>
+                        <a href="/swift/20161124/18129.html" target="_blank" title="绝大多数的手机应用在某一时刻需要通过网络向后台主机或服务器请求数据或者进行数据更新。然而，网络连接并不总是一直处于可用状态，随时都有可能出现断开连接导致不可用的情况。为了解此问">Swift中的Network Reachability</a>
+                     </li>
+
+                </ul>
+            </div>
+            <div class="clearfix" style="margin-top:20px;" >
+                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- CC评论框 -->
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:750px;height:90px"
+                     data-ad-client="ca-pub-1180518835303646"
+                     data-ad-slot="8242010366"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+            <!-- 评论模块start -->
+            
+            <div class="clearfix" id="commnet_list_holder" style="margin-bottom:50px;">
+                <div class="glab-comment-form">
+                    <div class="dcbt">我来说两句</div>
+                    <div class="user-head">
+                        <img id="user_face_url" src="http://cdn.cocimg.com/bbs/images/face/none.gif" height="43" width="43" alt="">
+                    </div>
+                    <div class="form-region">
+                        <textarea name="comment" id="main_comment_content" cols="30" rows="10" placeholder="你怎么看？快来评论一下吧！"></textarea>
+                        <a class="submitform" id="main_comment_bt">发表评论</a>
+                        <div class="unlogin-mask">
+                            <div>您还没有登录！请<a href="/bbs/login.php">登录</a>或<a href="/bbs/register.php">注册</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="glab-comment-callback-msg" class="glab-comment-info"></div>
+                <div class="glab-comment-title">所有评论（<span>0</span>）</div>
+                <div class="glab-commentlist" id="commentlist">
+                    <a id="refresh_comment_btn" href="javascript:;" onclick="$('#morecomment').trigger('click')">刷新评论</a>
+                </div>
+                <div class="glab-comment-more" id="morecomment" style="display:none">
+                    更多评论
+                </div>
+            </div>
+            
+            <!-- 评论模块end -->
+
+
+        </div>
+        <!--./left-->
+        <!--侧边栏-->
+        <div class="clearfix newslist">
+            <div class="rightSide detail-right float-r"  >
+                <!--两周热门资讯推荐-->
+                <div>
+                    <div class="part-wrap clearfix">
+                        <h3>热门资讯</h3>
+                        <ul class="related-hot">
+                            <li class="clearfix"><a href="http://www.cocoachina.com/ios/20161209/18277.html" class="float-l pic" target="_blank" title="AFNetworking到底做了什么？"><img src="http://cc.cocimg.com/api/uploads/161204/b0c67b77868592968d2b7265cff762ba.png"  style="max-height:60px" alt="AFNetworking到底做了什么？"/></a><div style="margin-left:86px"><p class="related-intro"><a href="http://www.cocoachina.com/ios/20161209/18277.html" target="_blank" title="AFNetworking到底做了什么？">AFNetworking到底做了什么？</a></p><p class="hits">点击量<span>9526</span></p></div></li><li class="clearfix"><a href="http://www.cocoachina.com/ios/20161206/18304.html" class="float-l pic" target="_blank" title="iOS 10 的坑：新机首次安装 app，请求网络权限“是否允许使用数据”"><img src="http://cc.cocimg.com/api/uploads/161206/7968ac7347d9901a3f0793c2d496ea17.jpg"  style="max-height:60px" alt="iOS 10 的坑：新机首次安装 app，请求网络权限“是否允许使用数据”"/></a><div style="margin-left:86px"><p class="related-intro"><a href="http://www.cocoachina.com/ios/20161206/18304.html" target="_blank" title="iOS 10 的坑：新机首次安装 app，请求网络权限“是否允许使用数据”">iOS 10 的坑：新机首次安装 app，请求网络权限“是否允许使用数据”</a></p><p class="hits">点击量<span>7663</span></p></div></li><li class="clearfix"><a href="http://www.cocoachina.com/industry/20161208/18322.html" class="float-l pic" target="_blank" title="开发者与谷歌享受一整天的幸福：GOOGLE Developer Day 2016“开发说”"><img src="http://cc.cocimg.com/api/uploads/161208/1dfaf7346bb45acd8f216e84f358bda5.jpg"  style="max-height:60px" alt="开发者与谷歌享受一整天的幸福：GOOGLE Developer Day 2016“开发说”"/></a><div style="margin-left:86px"><p class="related-intro"><a href="http://www.cocoachina.com/industry/20161208/18322.html" target="_blank" title="开发者与谷歌享受一整天的幸福：GOOGLE Developer Day 2016“开发说”">开发者与谷歌享受一整天的幸福：GOOGLE Developer Day 2016“开发说”</a></p><p class="hits">点击量<span>7654</span></p></div></li><li class="clearfix"><a href="http://www.cocoachina.com/ios/20161207/18308.html" class="float-l pic" target="_blank" title="iOS 升级HTTPS通过ATS你所要知道的"><img src="http://cc.cocimg.com/api/uploads/161207/e33c93153ce163145aeec56adba91b97.jpg"  style="max-height:60px" alt="iOS 升级HTTPS通过ATS你所要知道的"/></a><div style="margin-left:86px"><p class="related-intro"><a href="http://www.cocoachina.com/ios/20161207/18308.html" target="_blank" title="iOS 升级HTTPS通过ATS你所要知道的">iOS 升级HTTPS通过ATS你所要知道的</a></p><p class="hits">点击量<span>7135</span></p></div></li><li class="clearfix"><a href="http://www.cocoachina.com/programmer/20161209/18336.html" class="float-l pic" target="_blank" title="TIOBE 12月编程语言排行榜 C语言颓势不改"><img src="http://cc.cocimg.com/api/uploads/161209/10d38de6a41f863088b883ee7a50e0c6.png"  style="max-height:60px" alt="TIOBE 12月编程语言排行榜 C语言颓势不改"/></a><div style="margin-left:86px"><p class="related-intro"><a href="http://www.cocoachina.com/programmer/20161209/18336.html" target="_blank" title="TIOBE 12月编程语言排行榜 C语言颓势不改">TIOBE 12月编程语言排行榜 C语言颓势不改</a></p><p class="hits">点击量<span>7121</span></p></div></li><li class="clearfix"><a href="http://www.cocoachina.com/ios/20161207/18315.html" class="float-l pic" target="_blank" title="如何使用Xcode Server进行持续集成并自动部署到iTunes Connect	"><img src="http://cc.cocimg.com/api/uploads/161207/811c7c53952bc0eb79886d0e549ed28a.jpg"  style="max-height:60px" alt="如何使用Xcode Server进行持续集成并自动部署到iTunes Connect	"/></a><div style="margin-left:86px"><p class="related-intro"><a href="http://www.cocoachina.com/ios/20161207/18315.html" target="_blank" title="如何使用Xcode Server进行持续集成并自动部署到iTunes Connect	">如何使用Xcode Server进行持续集成并自动部署到iTunes Connect	</a></p><p class="hits">点击量<span>4196</span></p></div></li><li class="clearfix"><a href="http://www.cocoachina.com/ios/20161209/18326.html" class="float-l pic" target="_blank" title="iOS那些“垃圾”的轮播"><img src="http://cc.cocimg.com/api/uploads/161209/fd6bec53a18f214693ce2c5267ecd8b6.jpg"  style="max-height:60px" alt="iOS那些“垃圾”的轮播"/></a><div style="margin-left:86px"><p class="related-intro"><a href="http://www.cocoachina.com/ios/20161209/18326.html" target="_blank" title="iOS那些“垃圾”的轮播">iOS那些“垃圾”的轮播</a></p><p class="hits">点击量<span>3876</span></p></div></li><li class="clearfix"><a href="http://www.cocoachina.com/programmer/20161212/18337.html" class="float-l pic" target="_blank" title="聪明的程序猿和2b程序员的区别"><img src="http://cc.cocimg.com/api/uploads/161209/f968b731173e7bd2fb0311807c3da5a6.jpg"  style="max-height:60px" alt="聪明的程序猿和2b程序员的区别"/></a><div style="margin-left:86px"><p class="related-intro"><a href="http://www.cocoachina.com/programmer/20161212/18337.html" target="_blank" title="聪明的程序猿和2b程序员的区别">聪明的程序猿和2b程序员的区别</a></p><p class="hits">点击量<span>3425</span></p></div></li><li class="clearfix"><a href="http://www.cocoachina.com/programmer/20161207/18309.html" class="float-l pic" target="_blank" title="从培训班出来之后找工作的经历，教会了我这五件事"><img src="http://cc.cocimg.com/api/uploads/161207/c1e27d16ed1441a44475d3a7c5ea23e6.jpg"  style="max-height:60px" alt="从培训班出来之后找工作的经历，教会了我这五件事"/></a><div style="margin-left:86px"><p class="related-intro"><a href="http://www.cocoachina.com/programmer/20161207/18309.html" target="_blank" title="从培训班出来之后找工作的经历，教会了我这五件事">从培训班出来之后找工作的经历，教会了我这五件事</a></p><p class="hits">点击量<span>3378</span></p></div></li><li class="clearfix noborder-b"><a href="http://www.cocoachina.com/ios/20161212/18331.html" class="float-l pic" target="_blank" title="iOS时间问题"><img src="http://cc.cocimg.com/api/uploads/161209/e1f995f59b2eb035512e102e3795c950.jpg"  style="max-height:60px" alt="iOS时间问题"/></a><div style="margin-left:86px"><p class="related-intro"><a href="http://www.cocoachina.com/ios/20161212/18331.html" target="_blank" title="iOS时间问题">iOS时间问题</a></p><p class="hits">点击量<span>2711</span></p></div></li>
+                        </ul>
+                    </div>
+               </div>
+               <!--./两周热门资讯推荐-->
+               <!--综合评论-->
+                <div class="part-wrap clearfix" style="margin-top: 15px;">
+                    <h3>综合评论</h3>
+                    <ul class="related-comment clearfix" id="all_comments_holder">
+                        <li><span class="hide_comment">mark</span><br/><p><span>wjiuxing</span><span>评论了</span><a href="http://www.cocoachina.com/ios/20161130/18229.html" title="获取iOS设备信息(内存/电量/容量/型号/IP地..." target="_blank" ><span>获取iOS设备信息(内存/电量/容量/型号/IP地...</span></a></p></li><li><span class="hide_comment">。。。。</span><br/><p><span>XiaoHan995</span><span>评论了</span><a href="http://www.cocoachina.com/programmer/20161212/18337.html" title="聪明的程序猿和2b程序员的区别" target="_blank" ><span>聪明的程序猿和2b程序员的区别</span></a></p></li><li><span class="hide_comment">还要看单价</span><br/><p><span>夜雨滴答。</span><span>评论了</span><a href="http://www.cocoachina.com/programmer/20161216/18371.html" title="如果代码按行付费，我能写到马云破产!" target="_blank" ><span>如果代码按行付费，我能写到马云破产!</span></a></p></li><li><span class="hide_comment">mark&nbsp;&nbsp;以后有用<br></span><br/><p><span>程序猫</span><span>评论了</span><a href="http://www.cocoachina.com/ios/20141225/10765.html" title="NSURLProtocol和NSRunLoop的那..." target="_blank" ><span>NSURLProtocol和NSRunLoop的那...</span></a></p></li><li><span class="hide_comment">非常实用，通俗易懂，demo看着很清爽，Nice</span><br/><p><span>bgoayy東</span><span>评论了</span><a href="http://www.cocoachina.com/ios/20160928/17663.html" title="iOS使用自签名证书实现HTTPS请求" target="_blank" ><span>iOS使用自签名证书实现HTTPS请求</span></a></p></li><li><span class="hide_comment">受教了</span><br/><p><span>落叶控</span><span>评论了</span><a href="http://www.cocoachina.com/ios/20161216/18365.html" title="手机天猫解耦之路" target="_blank" ><span>手机天猫解耦之路</span></a></p></li><li><span class="hide_comment">没用过极光</span><br/><p><span>yif</span><span>评论了</span><a href="http://www.cocoachina.com/industry/20161215/18364.html" title="极光开发者服务推出统计产品JAnalytics" target="_blank" ><span>极光开发者服务推出统计产品JAnalytics</span></a></p></li><li><span class="hide_comment">-&nbsp;(void)doNothing:(int)v&nbsp;&nbsp;//传值<br>{<br>&nbsp;&nbsp;&nbsp;<br>}<br>&nbsp;<br>-&nbsp;(void)doNothing:(NSMutableArray*)arr&nbsp;//传变量<br>{<br>&nbsp;&nbsp;<br>}<br><br>为什么第二个是传变量?不是形参吗</span><br/><p><span>littlepriest</span><span>评论了</span><a href="http://www.cocoachina.com/ios/20161209/18325.html" title="简单点，理解iOS与函数式编程" target="_blank" ><span>简单点，理解iOS与函数式编程</span></a></p></li><li><span class="hide_comment">mark</span><br/><p><span>DreamFlyingCow</span><span>评论了</span><a href="http://www.cocoachina.com/ios/20161130/18229.html" title="获取iOS设备信息(内存/电量/容量/型号/IP地..." target="_blank" ><span>获取iOS设备信息(内存/电量/容量/型号/IP地...</span></a></p></li><li class="noborder-b"><span class="hide_comment">mark</span><br/><p><span>蜗牛的苦修</span><span>评论了</span><a href="http://www.cocoachina.com/ios/20161207/18308.html" title="iOS 升级HTTPS通过ATS你所要知道的" target="_blank" ><span>iOS 升级HTTPS通过ATS你所要知道的</span></a></p></li>
+                    </ul>
+                </div>
+                <!--./综合评论-->
+                <!--相关帖子-->
+                <div class="part-wrap clearfix" style="margin:15px 0 15px 0;">
+                    <h3>相关帖子</h3>
+                    <ul class="related-comment clearfix">
+                        <script charset="gb2312" src="http://www.cocoachina.com/bbs/new.php?action=article&fidin=21_18_2_8_19_41_59_48_56_14_36_5&digest=0&postdate=0&author=0&fname=0&hits=0&replies=0&pre=0&num=10&length=100&order=2&like=ios#iOS开发"></script>
+                    </ul>
+                </div>
+                <!--./相关帖子-->
+                <iframe width="230" height="550" class="share_self" frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=230&height=550&fansRow=2&ptype=1&speed=0&skin=5&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=1659808677&verifier=6043be56&dpc=1"></iframe>
+                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- CC列表页面230x230 -->
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:230px;height:230px"
+                     data-ad-client="ca-pub-1180518835303646"
+                     data-ad-slot="6765277166"></ins>
+                <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+        <!--./侧边栏-->
+    </div>
+
+    <div id="coco-store" style="display:none">
+        <div class="storebox">
+            <h5>提示</h5>
+            <h3>已经收藏该篇文章</h3>
+            <p class="p1"><a href="/bbs/u.php?action=favor&tag=1" target="_blank">去我的收藏夹</a></p>
+            <p class="p2"><a href="/bbs/login.php">请登录</a></p>
+        </div>
+    </div> <!--收藏提示-->
+</div>
+
+<script type="text/javascript">
+
+function postDigg(ftype,aid)
+{
+    var taget_obj = document.getElementById('newdigg');
+    var saveid = GetCookie('diggid');
+    if(saveid != null)
+    {
+        var saveids = saveid.split(',');
+        var hasid = false;
+        saveid = '';
+        j = 1;
+        for(i=saveids.length-1;i>=0;i--)
+        {
+            if(saveids[i]==aid && hasid) continue;
+            else {
+                if(saveids[i]==aid && !hasid) hasid = true;
+                saveid += (saveid=='' ? saveids[i] : ','+saveids[i]);
+                j++;
+                if(j==20 && hasid) break;
+                if(j==19 && !hasid) break;
+            }
+        }
+        if(hasid) { alert("您已经顶过该帖，请不要重复顶帖 ！"); return; }
+        else saveid += ','+aid;
+        SetCookie('diggid',saveid,1);
+    }
+    else
+    {
+        SetCookie('diggid',aid,1);
+    }
+    myajax = new DedeAjax(taget_obj,false,false,'','','');
+    var url = "/cms/plus/digg_ajax.php?action="+ftype+"&id="+aid;
+    myajax.SendGet2(url);
+    DedeXHTTP = null;
+    $('#zanbox').addClass('zanbox-selected');
+}
+function getDigg(aid)
+{
+    var taget_obj = document.getElementById('newdigg');
+    myajax = new DedeAjax(taget_obj,false,false,'','','');
+    myajax.SendGet2("/cms/plus/digg_ajax.php?id="+aid);
+    DedeXHTTP = null;
+}
+
+
+//显示对应的导航：
+$(function(){
+    var article_id = $('#article_id').val();
+    var saveid = GetCookie('diggid');
+
+    if(saveid != null)
+    {
+        var saveids = saveid.split(',');
+        var hasid = false;
+        saveid = '';
+        j = 1;
+        for(i=saveids.length-1;i>=0;i--)
+        {
+            if(saveids[i]==article_id && hasid) continue;
+            else {
+                if(saveids[i]==article_id && !hasid) hasid = true;
+                saveid += (saveid=='' ? saveids[i] : ','+saveids[i]);
+                j++;
+                if(j==20 && hasid) break;
+                if(j==19 && !hasid) break;
+            }
+        }
+
+        if(hasid)
+        {
+            $('#zanbox').addClass('zanbox-selected');
+        }
+
+    }
+
+});
+
+window.onload = function() {
+
+    $('#sharediv').removeClass('bdshare-button-style1-32');
+    $('#sharediv').attr('class','bdsharebuttonbox');
+};
+</script>
+<script type="text/javascript" src="http://cdn.cocimg.com/cms/templets/js/shCore.js"></script>
+    <script type="text/javascript" src="http://cdn.cocimg.com/cms/templets/js/brush.js"></script>
+    <link type="text/css" rel="stylesheet" href="http://cdn.cocimg.com/cms/templets/style/shCoreDefault.css"/>
+    <script type="text/javascript">
+    //SyntaxHighlighter.config.clipboardSwf = '/js/scripts/clipboard.swf';
+
+    SyntaxHighlighter.all();</script>
+
+
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"Swift中协议的简单介绍 - 来自CocoaChina苹果开发中文站@CocoaChina","bdMini":"2","bdMiniList":false,"bdPic":"http://api.cocoachina.com/uploads/161218/73b247cf2ac1896b1eecedfc1f4acdbf.jpg","bdStyle":"1","bdSize":"32"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api//js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+<!--./cont-->
+
+<!-- 回复评论框模板 -->
+<script type="text/javascript" src="http://cdn.cocimg.com/cms/templets/js/comment.js?v=20151019"></script>
+<script type="text/javascript" src="http://cdn.cocimg.com/cms/templets/js/mustache.min.js"></script>
+<!-- 回复评论框模板 -->
+<script id="reply_comment_template" type="x-tmpl-mustache">
+    <div id="sub-reply-comment" class="reply-comment">
+        <textarea name="subcomment" id="sub-reply-txt" cols="30" rows="10" placeholder="你怎么看？快来评论一下吧！"></textarea>
+        <input type="hidden" id="sub-reply-id" value="{{commentid}}" />
+        <input type="hidden" id="sub-reply-userid" value="{{parentuserid}}" />
+        <input type="hidden" id="sub-reply-username" value="{{parentusername}}" />
+        <a type="button" id="sub_comment_bt" class="submitbt">提交</a>
+        <div class="clearfloat"></div>
+        <div class="unlogin-mask">
+            <div>您还没有登录！请<a href="/bbs/login.php">登录</a>或<a href="/bbs/register.php">注册</a></div>
+        </div>
+    </div>
+</script>
+
+<!-- 评论模板 -->
+<script id="main_comment_template" type="x-tmpl-mustache">
+    <div class="glab-comment" rel-data-id="{{comment_id}}" rel-user-id="{{user_id}}" rel-user-name="{{user_name}}" rel-layer="1">
+        <div class="comment-left">
+            <a href="/bbs/u.php?action=feed&uid={{user_id}}" target="_blank"><img src="{{user_icon_url}}" height="43" width="43" alt=""></a>
+        </div>
+        <div class="comment-right">
+            <div class="comment-author"><a href="/bbs/u.php?action=feed&uid={{user_id}}" target="_blank">{{user_name}}</a><span class="puptime">{{create_time}}</span></div>
+            <div class="comment-content">{{&content}}</div>
+            <div class="comment-buttons">
+                <span class="ding">                    
+                    <img src="http://cdn.cocimg.com/cms/templets/images/zan-default.png" height="14" width="14" alt="" class="default" style="{{#has_supported}} display:none; {{/has_supported}}">
+                    <img src="http://cdn.cocimg.com/cms/templets/images/zan-active.png" height="14" width="14" alt="" class="actived" style="{{^has_supported}} display:none; {{/has_supported}}">
+                    <span class="zancnt">{{support}}</span>
+                </span>
+                <span class="cai">
+                    <img src="http://cdn.cocimg.com/cms/templets/images/cai-default.png" height="14" width="14" alt="" class="default" style="{{#has_reported}} display:none; {{/has_reported}}">
+                    <img src="http://cdn.cocimg.com/cms/templets/images/cai-active.png" height="14" width="14" alt="" class="actived" style="{{^has_reported}} display:none; {{/has_reported}}">
+                    <span class="zancnt">{{report}}</span>
+                </span>
+                <span class="replybt">回复</span>
+            </div>
+        </div>
+            {{#sub}}
+                <div class="glab-comment glab-sub-comment" rel-data-id="{{comment_id}}" rel-user-id="{{user_id}}" rel-user-name="{{user_name}}" rel-layer="2">
+                    <div class="comment-left">
+                        <a href="/bbs/u.php?action=feed&uid={{user_id}}" target="_blank"><img src="{{user_icon_url}}" height="43" width="43" alt=""></a>
+                    </div>
+                    <div class="comment-right">
+                        <div class="comment-author"><a href="/bbs/u.php?action=feed&uid={{user_id}}" target="_blank">{{user_name}}</a><span class="puptime">{{create_time}}</span></div>
+                        <div class="comment-content"><a href="/bbs/u.php?action=feed&uid={{parent_user_id}}" target="_blank">回复：{{parent}}</a>{{&content}}</div>
+                        <div class="comment-buttons">
+                            <span class="ding">
+                                <img src="http://cdn.cocimg.com/cms/templets/images/zan-default.png" height="14" width="14" alt="" class="default" style="{{#has_supported}} display:none; {{/has_supported}}">
+                                <img src="http://cdn.cocimg.com/cms/templets/images/zan-active.png" height="14" width="14" alt="" class="actived" style="{{^has_supported}} display:none; {{/has_supported}}">
+                                <span class="zancnt">{{support}}</span>
+                            </span>
+                            <span class="cai">
+                                <img src="http://cdn.cocimg.com/cms/templets/images/cai-default.png" height="14" width="14" alt="" class="default" style="{{#has_reported}} display:none; {{/has_reported}}">
+                                <img src="http://cdn.cocimg.com/cms/templets/images/cai-active.png" height="14" width="14" alt="" class="actived" style="{{^has_reported}} display:none; {{/has_reported}}">
+                                <span class="zancnt">{{report}}</span>
+                            </span>
+                            <span class="replybt">回复</span>
+                        </div>          
+                    </div>
+                </div>
+            {{/sub}}         
+    </div>  
+</script>
+
+
+<script id="sub_comment_template" type="x-tmpl-mustache">
+    <div class="glab-comment glab-sub-comment" rel-data-id="{{comment_id}}" rel-user-id="{{user_id}}" rel-user-name="{{user_name}}" rel-layer="2">
+        <div class="comment-left">
+            <a href="/bbs/u.php?action=feed&uid={{user_id}}" target="_blank"><img src="{{user_icon_url}}" height="43" width="43" alt=""></a>
+        </div>
+        <div class="comment-right">
+            <div class="comment-author"><a href="/bbs/u.php?action=feed&uid={{user_id}}" target="_blank">{{user_name}}</a><span class="puptime">{{create_time}}</span></div>
+            <div class="comment-content"><a href="/bbs/u.php?action=feed&uid={{parent_user_id}}" target="_blank">回复：{{parent}}</a>{{&content}}</div>
+            <div class="comment-buttons">
+                <span class="ding">
+                    <img src="http://cdn.cocimg.com/cms/templets/images/zan-default.png" height="14" width="14" alt="" class="default" style="{{#has_supported}} display:none; {{/has_supported}}">
+                    <img src="http://cdn.cocimg.com/cms/templets/images/zan-active.png" height="14" width="14" alt="" class="actived" style="{{^has_supported}} display:none; {{/has_supported}}">
+                    <span class="zancnt">{{support}}</span>
+                </span>
+                <span class="cai">
+                    <img src="http://cdn.cocimg.com/cms/templets/images/cai-default.png" height="14" width="14" alt="" class="default" style="{{#has_reported}} display:none; {{/has_reported}}">
+                    <img src="http://cdn.cocimg.com/cms/templets/images/cai-active.png" height="14" width="14" alt="" class="actived" style="{{^has_reported}} display:none; {{/has_reported}}">
+                    <span class="zancnt">{{report}}</span>
+                </span>
+                <span class="replybt">回复</span>
+            </div>          
+        </div>
+    </div>
+</script>
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-68948817-1', 'auto', {'name': 'newTracker'});
+  ga('newTracker.send', 'pageview');
+
+</script>
+</div>    
+<!--右侧浮动-->
+    <div class="r-bar">
+        <img src="http://cdn.cocimg.com/cms/templets/images/coco_weixin.png" class="weixin">
+    	<a href="http://weibo.com/cocoachina" target="_blank" title="" class="weibo">sina</a>
+        <a href="javascript:void(0);" target="_blank" title="" class="feedback">weixin</a>
+        <a href="mailto:support@cocoachina.com" title="" class="kefu">mail</a>
+        <a href="javascript:;" title="回到顶部" class="returntop">回到顶部</a>
+    </div>
+
+<script language="javascript" src="/cms/bbsauth_plus2015.php" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+    if (typeof(_user_info_html) != 'undefined' && _user_info_html)
+    {
+        $('.nav-user-login').hide();
+        $('.nav-user-name').html(_user_info_html).show();
+    }
+
+	var type = $('#type_name').html();
+	if(type)
+	{	
+		switch( type )
+		{
+			case 'iOS开发':
+				$('#ios').addClass('light');
+				break;
+			case 'AppStore研究':
+				$('#app_store').addClass('light');
+				break;
+			case 'Mac开发':
+				$('#mac').addClass('light');
+				break;
+			case '产品设计':
+				$('#design').addClass('light');
+				break;
+			case 'Cocos引擎':
+				$('#cocos').addClass('light');
+				break;
+			case 'WebApp':
+				$('#webapp').addClass('light');
+				break;
+			case 'Swift':
+				$('#swift').addClass('light');
+				break;
+			case '游戏开发':
+				$('#game').addClass('light');
+				break;
+			case '苹果相关':
+				$('#apple').addClass('light');
+				break;
+			case '营销推广':
+				$('#market').addClass('light');
+				break;		
+			case '业界动态':
+				$('#industry').addClass('light');
+				break;	
+			case '程序人生':
+				$('#programmer').addClass('light');
+				break;																																
+				
+		}
+	}
+});
+</script>
+<!--./cont-->
+<script type="text/javascript" src="/cms/templets/js/index.js?20111546514"></script>
+<script src="http://cdn.cocimg.com/cms/templets/js/jquery.colorbox-min.js" type="text/javascript"></script>
+<script src="/cms/templets/js/script.js?t=2045479411" type="text/javascript"></script>
+<script type="text/javascript">
+			jQuery(function()
+			{
+				//更改文章来源
+				var source = $('#source a').html();								
+				if( source == '未知' )
+					jQuery('#source a').html('CocoaChina');
+				if( jQuery('#source a').attr('href')=='')
+					jQuery('#source').html('来源：'+source);
+				
+				//获取用户登录的id
+//                var content = jQuery('.t-lid').attr("href");
+//                var uid = 0;
+//                if( content )
+//                {
+//                    content = content.split('=');
+//                    uid = content[1];
+//                }
+//                var timestamp = new Date().getTime();	
+//                var uid2 = parseInt(uid);
+//                if(uid2==uid && uid2!=0){
+//                    uid = uid<<2;			
+//                    uid = uid+''+timestamp;
+//                }else{
+//                    uid = "";
+//                }
+//                var oIframe=document.getElementById("comiframe");
+//                if(oIframe){
+//                    var oUrl=window.location.href;
+//                    oUrl = encodeURIComponent(oUrl);
+//
+//                    oIframe.src="/comment.php?url="+oUrl+"&uid="+uid;
+//                }
+
+				
+			});
+		</script>
+<!--footer-->
+<div class="footer clearfix">
+    <div class="footer-b">
+        <div>
+            <a href="/aboutus/index.html" target="_blank">关于我们</a>
+            <a href="/contactus/index.html" target="_blank">商务合作</a>
+            <a href="mailto:support@cocoachina.com" target="_blank">联系我们</a>
+            <a href="/corps" target="_blank">合作伙伴</a>
+        </div>
+        <p class="footer-b-p">北京触控科技有限公司版权所有</p>
+        <p>
+            &copy;2016 Chukong Technologies,Inc.
+            <i>
+                <a href="http://www.miibeian.gov.cn/" target="_blank">京ICP备 11006519号 　京ICP证 100954号</a> 京公网安备11010502020289 
+                <a href="http://182.131.21.137/ccnt-apply/admin/business/preview/business-preview!lookUrlRFID.action?main_id=A580B24B1AE846CE9DA949026D63939F" target="_blank">
+                    <img src="http://cdn.cocimg.com/cms/templets/images/jingwen.png" style="margin: -10px auto -14px -10px;" />
+                    京网文[2012]0426-138号
+                </a>
+            </i>
+        </p>
+    </div>
+</div>
+<!--./footer-->
+<script language="javascript" type="text/javascript" src="/cms/include/dedeajax2-min.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?88399e4c4cf744609c4fc8c3a8935691";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-16940817-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+  
+ 
+function search_check()
+{
+	var search_keyword = $('#search_keyword').val();
+
+	if( search_keyword.length < 2 )
+	{
+		alert("搜索关键字不能少于2个字节，请重新输入。");
+	}
+	else
+	{
+		$('#searchform').submit();
+	}
+}
+
+</script>
+<script type="text/javascript">
+_acK({aid:116313,format:0,mode:1,gid:1,serverbaseurl:"afp.csbew.com/"});
+</script>
+
+</body>
+</html>
