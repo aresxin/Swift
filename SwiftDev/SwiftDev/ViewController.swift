@@ -10,6 +10,10 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak  var listView: UITableView!
+    
+    let lists = ["UserDefaults"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -19,7 +23,35 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
 }
 
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        cell.textLabel?.text = lists[indexPath.row]
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return lists.count
+    }
+}
+
+extension ViewController {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        pushViewController(index: indexPath.row)
+    }
+}
+
+extension ViewController {
+    func pushViewController(index: Int)  {
+        let sBoardId = lists[index]
+    
+        guard let vc = self.storyboard?.instantiateViewController(withIdentifier: sBoardId) else {
+            return
+        }
+        
+        self.navigationController?.pushViewController(vc, animated: false)
+    }
+}
