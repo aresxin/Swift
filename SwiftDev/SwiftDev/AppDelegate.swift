@@ -16,6 +16,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+
+//        NSSetUncaughtExceptionHandler(CustomUncaughtExceptionHandler())
+
+//        NSSetUncaughtExceptionHandler {exception in
+//            print(">>>>> ExceptionHandler OK")
+//            let arr = exception.callStackSymbols//得到当前调用栈信息
+//            let reason = exception.reason//非常重要，就是崩溃的原因
+//            let name = exception.name//异常类型
+//
+//            NSLog("exception type : \(name) \n crash reason : \(String(describing: reason)) \n call stack info : \(arr)");
+//
+//            let log = NSString(format:"%@, %@", exception.name as CVarArg, exception.reason!)
+//            UserDefaults.standard.setValue("crash", forKey: "failLog")
+//            UserDefaults.standard.synchronize()
+//        }
+
+
+        exceptionLogWithData()
         return true
     }
 
@@ -43,4 +61,65 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
+
+
+func CustomUncaughtExceptionHandler() -> @convention(c) (NSException) -> Void {
+    return { (exception) -> Void in
+        let arr = exception.callStackSymbols//得到当前调用栈信息
+        let reason = exception.reason//非常重要，就是崩溃的原因
+        let name = exception.name//异常类型
+
+        NSLog("exception type : \(name) \n crash reason : \(String(describing: reason)) \n call stack info : \(arr)");
+
+
+    }
+}
+
+
+func exceptionLogWithData() {
+    setDefaultHandler()
+    let str = getdataPath()
+//    do {
+//        try FileManager.default.removeItem(atPath: str)
+//    } catch {
+//
+//    }
+
+    let data = NSData.init(contentsOfFile: str)
+    if data != nil {
+        let crushStr = String.init(data: data as! Data, encoding: String.Encoding.utf8)
+        print(crushStr!)
+    }
+
+
+    signal(SIGABRT) { (_) in
+        print("symobs is \(Thread.callStackSymbols)")
+    }
+    signal(SIGILL) { (_) in
+        print("symobs is \(Thread.callStackSymbols)")
+    }
+
+    signal(SIGSEGV) { (_) in
+        print("symobs is \(Thread.callStackSymbols)")
+    }
+    signal(SIGFPE) { (_) in
+        print("symobs is \(Thread.callStackSymbols)")
+    }
+    signal(SIGBUS) { (_) in
+        print("symobs is \(Thread.callStackSymbols)")
+    }
+
+    signal(SIGPIPE) { (_) in
+        print("symobs is \(Thread.callStackSymbols)")
+    }
+
+
+    let arry = ["1"]
+    print("%@",arry[20])
+
+    //测试数据
+//    let arry:NSArray = ["1"]
+//    print("%@",arry[20])
+}
+
 

@@ -17,11 +17,22 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        let name = UIDevice.modelName
+        print("name is \(name)")
+
+        let aar = [1,2,4]
+
+        let  sss = UserDefaults.standard.string(forKey: "failLog")
+        print("sss ----is \(String(describing: sss))")
+
+        _ = aar[5]
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+
+
     }
 }
 

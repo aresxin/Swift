@@ -12,6 +12,7 @@
 		FD74E9AC1E63D50A00AD9F0B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD74E9AA1E63D50A00AD9F0B /* Main.storyboard */; };
 		FD74E9AE1E63D50A00AD9F0B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD74E9AD1E63D50A00AD9F0B /* Assets.xcassets */; };
 		FD74E9B11E63D50A00AD9F0B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD74E9AF1E63D50A00AD9F0B /* LaunchScreen.storyboard */; };
+		FD8267931ED56F5C004DE1EC /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8267921ED56F5C004DE1EC /* Device.swift */; };
 		FD9CC8881E76813F00610F06 /* PreferenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9CC8871E76813F00610F06 /* PreferenceManager.swift */; };
 		FD9CC88A1E76838600610F06 /* UserDefaultsTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9CC8891E76838600610F06 /* UserDefaultsTestViewController.swift */; };
 		FD9CC88C1E76869F00610F06 /* UserDefaultSettable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9CC88B1E76869F00610F06 /* UserDefaultSettable.swift */; };
@@ -25,6 +26,7 @@
 		FD74E9AD1E63D50A00AD9F0B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FD74E9B01E63D50A00AD9F0B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FD74E9B21E63D50A00AD9F0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FD8267921ED56F5C004DE1EC /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		FD9CC8871E76813F00610F06 /* PreferenceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceManager.swift; sourceTree = "<group>"; };
 		FD9CC8891E76838600610F06 /* UserDefaultsTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsTestViewController.swift; sourceTree = "<group>"; };
 		FD9CC88B1E76869F00610F06 /* UserDefaultSettable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultSettable.swift; sourceTree = "<group>"; };
@@ -62,6 +64,7 @@
 			children = (
 				FD74E9A61E63D50A00AD9F0B /* AppDelegate.swift */,
 				FD74E9A81E63D50A00AD9F0B /* ViewController.swift */,
+				FD8267921ED56F5C004DE1EC /* Device.swift */,
 				FD74E9AA1E63D50A00AD9F0B /* Main.storyboard */,
 				FD9CC8861E76810100610F06 /* UserDefaults */,
 				FD74E9AD1E63D50A00AD9F0B /* Assets.xcassets */,
@@ -157,6 +160,7 @@
 				FD9CC88C1E76869F00610F06 /* UserDefaultSettable.swift in Sources */,
 				FD74E9A91E63D50A00AD9F0B /* ViewController.swift in Sources */,
 				FD9CC88A1E76838600610F06 /* UserDefaultsTestViewController.swift in Sources */,
+				FD8267931ED56F5C004DE1EC /* Device.swift in Sources */,
 				FD9CC8881E76813F00610F06 /* PreferenceManager.swift in Sources */,
 				FD74E9A71E63D50A00AD9F0B /* AppDelegate.swift in Sources */,
 			);
